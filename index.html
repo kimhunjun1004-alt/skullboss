@@ -517,6 +517,7 @@
       const BOSS_PARRY_MINION_COUNT = 2;
       const BOSS_PARRY_MINION_SPAWN_DISTANCE = BLOCK * 12;
       const BOSS_PARRY_STUN_BLINK_INTERVAL = 0.3;
+      const BOSS_NIGHT_TRANSITION_DURATION = 4;
       const BOSS_PATTERN_TWO_LEAP_DURATION = 0.35;
       const BOSS_PATTERN_TWO_AIM_DURATION = 0.5;
       const BOSS_PATTERN_TWO_DIVE_DURATION = 0.3;
@@ -602,6 +603,9 @@
       defenseBreakSound.preload = "auto";
       const parrySound = new Audio("사운드/ferryed.mp3");
       parrySound.preload = "auto";
+      const bossMusic = new Audio("사운드/Loop Hero.mp3");
+      bossMusic.preload = "auto";
+      bossMusic.loop = true;
       const player = {
         hp: PLAYER_MAX_HP,
         defenseHp: PLAYER_MAX_DEFENSE_HP,
@@ -706,6 +710,7 @@
       let bossParryStunElapsed = 0;
       let bossParryStunBlinkElapsed = 0;
       let bossParryMinions = [];
+      let bossNightLevel = 0;
 
       function pressInputKey(key, source) {
         const sourceKeys = source === "keyboard" ? keyboardKeys : touchKeys;
@@ -1044,6 +1049,10 @@
 
       function spawnBoss() {
         boss.active = true;
+        bossMusic.currentTime = 0;
+        bossMusic.play().catch((error) => {
+          console.error("보스 음악을 재생하지 못했습니다.", error);
+        });
         boss.hp = BOSS_MAX_HP;
         boss.maxHp = BOSS_MAX_HP;
         boss.phase = 1;
@@ -1598,7 +1607,7 @@
           if (horizontalDistance !== 0) minion.facing = Math.sign(horizontalDistance);
           if (horizontalGap <= MONSTER_MELEE_RANGE && verticalOverlap) {
             if (minion.attackCooldown === 0) {
-              damagePlayer(MONSTER_DAMAGE, minion.facing);
+              damagePlayer(MONSTER_DAMAGE);
               minion.attackCooldown = MONSTER_MELEE_COOLDOWN;
             }
           } else {
@@ -1919,6 +1928,9 @@
 
       function update(delta) {
         if (gameOver) return;
+        const targetNightLevel = boss.active && !boss.defeated ? 1 : 0;
+        const nightBlend = Math.min(1, delta / BOSS_NIGHT_TRANSITION_DURATION);
+        bossNightLevel += (targetNightLevel - bossNightLevel) * nightBlend;
         player.dashCooldown = Math.max(0, player.dashCooldown - delta);
         player.dashInvulnerabilityElapsed = Math.max(
           0,
@@ -2099,12 +2111,20 @@
       }
 
       function drawBackground() {
+        const floor = floorY();
+        const nightGradient = context.createLinearGradient(0, 0, 0, floor);
+        nightGradient.addColorStop(0, "#071126");
+        nightGradient.addColorStop(1, "#263650");
+        context.fillStyle = nightGradient;
+        context.fillRect(0, 0, viewWidth, floor);
+
+        context.save();
+        context.globalAlpha = 1 - bossNightLevel;
         context.fillStyle = backgroundGradient;
-        context.fillRect(0, 0, viewWidth, viewHeight);
+        context.fillRect(0, 0, viewWidth, floor);
 
         const cloudUnit = BLOCK / 2;
-        context.save();
-        context.globalAlpha = 0.48;
+        context.globalAlpha *= 0.48;
         context.fillStyle = "#f4fbfc";
         for (let index = 0; index < 18; index++) {
           const worldX = index * BLOCK * 12 + (index % 3) * cloudUnit * 2;
@@ -2118,7 +2138,6 @@
         }
         context.restore();
 
-        const floor = floorY();
         for (let index = 0; index < 19; index++) {
           const worldX = index * BLOCK * 11;
           const width = BLOCK * (3 + index % 3);
@@ -2127,6 +2146,21 @@
           const buildingTop = floor - BLOCK * 8;
           context.fillStyle = ["#89999c", "#829296", "#909d9e"][index % 3];
           context.fillRect(screenX, buildingTop, width, floor - buildingTop);
+        }
+        if (bossNightLevel > 0.001) {
+          context.fillStyle = `rgba(5, 10, 28, ${bossNightLevel * 0.22})`;
+          context.fillRect(0, 0, viewWidth, floor);
+
+          context.save();
+          context.globalAlpha = bossNightLevel * 0.75;
+          context.fillStyle = "#e7f0ff";
+          for (let index = 0; index < 36; index += 1) {
+            const x = (index * 197 + 31) % Math.max(1, viewWidth);
+            const y = (index * 83 + 17) % Math.max(1, Math.floor(floor * 0.78));
+            const size = index % 7 === 0 ? 2 : 1;
+            context.fillRect(x, y, size, size);
+          }
+          context.restore();
         }
       }
 
@@ -2509,6 +2543,8 @@
 
       function restartGame() {
         clearInputKeys();
+        bossMusic.pause();
+        bossMusic.currentTime = 0;
         activeTouchPointers.clear();
         joystickPointerId = null;
         joystickDirection = "";
