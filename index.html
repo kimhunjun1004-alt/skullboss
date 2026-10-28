@@ -334,19 +334,19 @@
       }
 
       body.mobile-mode .touch-joystick {
-        width: 116px;
-        height: 116px;
-        flex-basis: 116px;
+        width: 100px;
+        height: 100px;
+        flex-basis: 100px;
       }
 
       body.mobile-mode .touch-joystick-stick {
-        width: 48px;
-        height: 48px;
+        width: 42px;
+        height: 42px;
       }
 
       body.mobile-mode .touch-control--large {
-        min-width: 66px;
-        min-height: 66px;
+        min-width: 54px;
+        min-height: 54px;
         font-size: 14px;
       }
     }
@@ -375,6 +375,7 @@
         <div class="touch-control-group">
           <button class="touch-control touch-control--large" type="button" data-touch-action="dash" aria-label="대쉬">대쉬</button>
           <button class="touch-control touch-control--large" type="button" data-touch-action="defense" aria-label="방어">방어</button>
+          <button class="touch-control touch-control--large" type="button" data-touch-action="jump" aria-label="점프">점프</button>
         </div>
       </nav>
       <section id="game-over" class="game-over" aria-labelledby="game-over-title" hidden>
@@ -389,7 +390,7 @@
       <span class="keyboard-help"><kbd>Z</kbd> 8블럭 돌진</span>
       <span class="keyboard-help"><kbd>X</kbd> 방어</span>
       <span class="keyboard-help"><kbd>T</kbd> 패턴 6</span>
-      <span class="touch-help">조이스틱 위쪽: 점프 · 아래쪽: 발판 내려가기 · 대쉬 · 방어</span>
+      <span class="touch-help">조이스틱 좌우: 이동 · 아래쪽: 발판 내려가기 · 점프 · 대쉬 · 방어</span>
     </p>
   </main>
   <script>
@@ -2669,6 +2670,7 @@
       window.addEventListener("keyup", (event) => releaseInputKey(event.key, "keyboard"));
       function startTouchAction(action) {
         if (action === "dash") startDash();
+        if (action === "jump") jump();
         if (action === "defense") {
           if (player.defenseBreakElapsed > 0 || player.defenseHp <= 0) return;
           if (!isDefenseHeld()) {
@@ -2710,7 +2712,7 @@
           return;
         }
         if (Math.abs(rawY) > Math.abs(rawX) * 1.15) {
-          setJoystickDirection(rawY < 0 ? "up" : "down");
+          setJoystickDirection(rawY < 0 ? "" : "down");
         } else {
           setJoystickDirection(rawX < 0 ? "left" : "right");
         }
