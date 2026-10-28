@@ -31,9 +31,10 @@
     }
 
     .topbar {
-      display: flex;
+      display: grid;
+      grid-template-columns: max-content minmax(0, 1fr);
       justify-content: space-between;
-      align-items: center;
+      align-items: start;
       gap: 16px;
       margin: 0 0 10px;
       color: #d7d7d7;
@@ -48,7 +49,9 @@
     }
 
     #readout {
-      white-space: nowrap;
+      min-width: 0;
+      text-align: right;
+      overflow-wrap: anywhere;
       font-variant-numeric: tabular-nums;
     }
 
@@ -71,8 +74,59 @@
       background: rgba(0, 0, 0, 0.72);
     }
 
-    .game-over[hidden] {
+    .game-over[hidden],
+    .mode-selection[hidden] {
       display: none;
+    }
+
+    .mode-selection {
+      position: absolute;
+      z-index: 3;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.82);
+      text-align: center;
+    }
+
+    .mode-selection h2 {
+      margin: 0;
+      font-size: clamp(24px, 5vw, 40px);
+    }
+
+    .mode-selection p {
+      margin: 0;
+      color: #ccc;
+    }
+
+    .mode-options {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .mode-option {
+      min-width: 140px;
+      min-height: 52px;
+      padding: 10px 18px;
+      border: 2px solid #fff;
+      border-radius: 8px;
+      color: #fff;
+      background: #27394b;
+      font: inherit;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .mode-option:hover,
+    .mode-option:focus-visible {
+      background: #3a6388;
     }
 
     .game-over h2 {
@@ -98,6 +152,10 @@
       background: #b83434;
     }
 
+    .touch-controls {
+      display: none;
+    }
+
     canvas {
       display: block;
       width: 100%;
@@ -116,6 +174,10 @@
       font-size: 13px;
     }
 
+    body.mode-not-selected .help {
+      visibility: hidden;
+    }
+
     kbd {
       padding: 2px 6px;
       border: 1px solid #555;
@@ -123,6 +185,170 @@
       color: #fff;
       background: #181818;
       font: inherit;
+    }
+
+    .touch-help {
+      display: none;
+    }
+
+    body.mobile-mode main {
+      padding: 8px;
+    }
+
+    body.mobile-mode .topbar {
+      flex-wrap: wrap;
+      gap: 4px 12px;
+    }
+
+    body.mobile-mode #readout {
+      white-space: normal;
+      font-size: 12px;
+    }
+
+    body.mobile-mode canvas {
+      height: 62vh;
+      height: 62svh;
+      min-height: 300px;
+    }
+
+    body.mobile-mode .touch-controls {
+      position: absolute;
+      z-index: 1;
+      inset: 0;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 10px;
+      pointer-events: none;
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .touch-control-group {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      pointer-events: auto;
+    }
+
+    .touch-joystick {
+      position: relative;
+      width: 132px;
+      height: 132px;
+      flex: 0 0 132px;
+      border: 2px solid rgba(255, 255, 255, 0.55);
+      border-radius: 50%;
+      background: rgba(15, 20, 28, 0.5);
+      pointer-events: auto;
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .touch-joystick::before,
+    .touch-joystick::after {
+      position: absolute;
+      inset: 50% auto auto 50%;
+      content: "";
+      background: rgba(255, 255, 255, 0.2);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .touch-joystick::before {
+      width: 1px;
+      height: 80%;
+    }
+
+    .touch-joystick::after {
+      width: 80%;
+      height: 1px;
+    }
+
+    .touch-joystick-stick {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 54px;
+      height: 54px;
+      border: 2px solid rgba(255, 255, 255, 0.8);
+      border-radius: 50%;
+      background: rgba(70, 120, 190, 0.78);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .touch-control {
+      min-width: 48px;
+      min-height: 52px;
+      padding: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.65);
+      border-radius: 12px;
+      color: #fff;
+      background: rgba(15, 20, 28, 0.68);
+      font: inherit;
+      font-size: 16px;
+      font-weight: 700;
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .touch-control--large {
+      min-width: 76px;
+      min-height: 76px;
+      border-radius: 50%;
+      font-size: 17px;
+    }
+
+    .touch-control.is-pressed {
+      background: rgba(70, 120, 190, 0.88);
+      transform: scale(0.96);
+    }
+
+    body.mobile-mode .keyboard-help {
+      display: none;
+    }
+
+    body.mobile-mode .touch-help {
+      display: inline;
+    }
+
+    @media (max-width: 380px) {
+      body.mobile-mode .touch-controls {
+        gap: 4px;
+        padding: 8px;
+      }
+
+      body.mobile-mode .touch-control-group {
+        gap: 4px;
+      }
+
+      body.mobile-mode .touch-control {
+        min-width: 42px;
+        min-height: 48px;
+        padding: 4px;
+        font-size: 14px;
+      }
+
+      body.mobile-mode .touch-joystick {
+        width: 116px;
+        height: 116px;
+        flex-basis: 116px;
+      }
+
+      body.mobile-mode .touch-joystick-stick {
+        width: 48px;
+        height: 48px;
+      }
+
+      body.mobile-mode .touch-control--large {
+        min-width: 66px;
+        min-height: 66px;
+        font-size: 14px;
+      }
     }
   </style>
 </head>
@@ -134,16 +360,36 @@
     </header>
     <div class="game-frame">
       <canvas id="game" aria-label="네모전사 2D 플랫폼 게임"></canvas>
+      <section id="mode-selection" class="mode-selection" aria-labelledby="mode-title">
+        <h2 id="mode-title">플레이 모드를 선택하세요</h2>
+        <p>선택한 조작 방식으로 게임을 시작합니다.</p>
+        <div class="mode-options">
+          <button class="mode-option" type="button" data-game-mode="computer">컴퓨터 모드</button>
+          <button class="mode-option" type="button" data-game-mode="mobile">모바일 모드</button>
+        </div>
+      </section>
+      <nav id="touch-controls" class="touch-controls" aria-label="터치 조작">
+        <div class="touch-joystick" data-touch-action="joystick" aria-label="이동 조이스틱">
+          <div class="touch-joystick-stick"></div>
+        </div>
+        <div class="touch-control-group">
+          <button class="touch-control touch-control--large" type="button" data-touch-action="dash" aria-label="대쉬">대쉬</button>
+          <button class="touch-control touch-control--large" type="button" data-touch-action="defense" aria-label="방어">방어</button>
+        </div>
+      </nav>
       <section id="game-over" class="game-over" aria-labelledby="game-over-title" hidden>
         <h2 id="game-over-title">GAME OVER</h2>
         <button id="restart" type="button">다시하기</button>
       </section>
     </div>
     <p class="help">
-      <span><kbd>←</kbd> <kbd>→</kbd> 이동</span>
-      <span><kbd>↑</kbd> 점프</span>
-      <span><kbd>↓</kbd> 발판 내려가기</span>
-      <span><kbd>Z</kbd> 8블럭 돌진</span>
+      <span class="keyboard-help"><kbd>←</kbd> <kbd>→</kbd> 이동</span>
+      <span class="keyboard-help"><kbd>↑</kbd> 점프</span>
+      <span class="keyboard-help"><kbd>↓</kbd> 발판 내려가기</span>
+      <span class="keyboard-help"><kbd>Z</kbd> 8블럭 돌진</span>
+      <span class="keyboard-help"><kbd>X</kbd> 방어</span>
+      <span class="keyboard-help"><kbd>T</kbd> 패턴 6</span>
+      <span class="touch-help">조이스틱 위쪽: 점프 · 아래쪽: 발판 내려가기 · 대쉬 · 방어</span>
     </p>
   </main>
   <script>
@@ -153,11 +399,25 @@
       const canvas = document.querySelector("#game");
       const context = canvas.getContext("2d");
       const readout = document.querySelector("#readout");
+      const touchControls = document.querySelector("#touch-controls");
       const gameOverOverlay = document.querySelector("#game-over");
       const restartButton = document.querySelector("#restart");
+      const modeSelection = document.querySelector("#mode-selection");
+      const activeTouchPointers = new Map();
+      const joystick = touchControls.querySelector('[data-touch-action="joystick"]');
+      const joystickStick = joystick.querySelector(".touch-joystick-stick");
+      const JOYSTICK_MAX_OFFSET = 38;
+      const JOYSTICK_ACTIVATION_OFFSET = 12;
+      let joystickPointerId = null;
+      let joystickDirection = "";
+      let gameStarted = false;
+
+      document.body.classList.add("mode-not-selected");
+
       const BLOCK = 32;
       const MAP_BLOCKS = 200;
       const WORLD_WIDTH = MAP_BLOCKS * BLOCK;
+      const MAX_PIXEL_RATIO = 1.5;
       const WALK_SPEED = BLOCK * 5;
       const AIR_SPEED = BLOCK * 5.5;
       const DASH_RECOVERY_SPEED = BLOCK * 2;
@@ -165,6 +425,22 @@
       const MONSTER_SPEED = BLOCK * 4;
       const MONSTER_SIZE = BLOCK * 4;
       const PLAYER_MAX_HP = 50;
+      const PLAYER_MAX_DEFENSE_HP = 20;
+      const PLAYER_DEFENSE_REGEN = 2.5;
+      const PLAYER_PARRY_WINDOW = 0.2;
+      const PLAYER_DEFENSE_EFFECT_DURATION = 0.3;
+      const PLAYER_DEFENSE_BREAK_DURATION = 2;
+      const PLAYER_DEFENSE_BREAK_EFFECT_DURATION = 2;
+      // Normalized scan bands approximating the colored silhouette in def0.png.
+      const DEFENSE_SHIELD_BANDS = [
+        { top: 0.32, bottom: 0.54, left: 0.36, right: 0.64 },
+        { top: 0.54, bottom: 0.56, left: 0.36, right: 0.64 },
+        { top: 0.56, bottom: 0.58, left: 0.38, right: 0.62 },
+        { top: 0.58, bottom: 0.60, left: 0.40, right: 0.60 },
+        { top: 0.60, bottom: 0.62, left: 0.42, right: 0.58 },
+        { top: 0.62, bottom: 0.64, left: 0.42, right: 0.58 },
+        { top: 0.64, bottom: 0.66, left: 0.46, right: 0.54 }
+      ];
       const MONSTER_MAX_HP = 10;
       const DASH_DAMAGE = 10;
       const MONSTER_DAMAGE = 5;
@@ -196,10 +472,13 @@
       const MONSTER_HIT_DURATION = MONSTER_KNOCKBACK_DURATION + MONSTER_SHAKE_DURATION;
       const PLAYER_MONSTER_HIT_STOP_DURATION = 0.1;
       const GRAVITY = BLOCK * 35;
+      const PLAYER_FALL_GRAVITY = GRAVITY * 1.4;
       const JUMP_HEIGHT = BLOCK * 5;
       const JUMP_SPEED = -Math.sqrt(2 * GRAVITY * JUMP_HEIGHT);
       const DROP_THROUGH_DURATION = 0.18;
       const DASH_TIME = 0.3;
+      const DASH_COOLDOWN = 0.5;
+      const DASH_INVULNERABILITY_DURATION = 0.2;
       const DASH_DISTANCE = BLOCK * 8;
       const DASH_SPEED = DASH_DISTANCE / DASH_TIME;
       const DASH_CAMERA_OFFSET = BLOCK * 2;
@@ -214,10 +493,88 @@
       const PLAYER_ART_VISIBLE_MIN_Y = 307 / 1024;
       const PLAYER_ART_VISIBLE_MAX_Y = 717 / 1024;
       const SPRITE_VISIBLE_BOTTOM = 717 / 1024;
+      const PATTERN_BOSS_SIZE = BLOCK * 8;
+      const PATTERN_BOSS_TARGET_DURATION = 0.8;
+      const PATTERN_BOSS_VERTICAL_GAP = BLOCK * 8;
+      const PATTERN_BOSS_APPROACH_SPEED = BLOCK * 32;
+      const PATTERN_BOSS14_COLOR_BOTTOM = 553 / 1024;
+      const PATTERN_BOSS13_SHAKE_AMPLITUDE = BLOCK * 0.3;
+      const PATTERN_BOSS13_SHAKE_SPEED = 32;
+      const PATTERN_BOSS_FADE_DURATION = 0.3;
+      const PATTERN_BOSS_DAMAGE = 10;
+      const PATTERN_BOSS12_DURATION = 1.1;
+      const PATTERN_BOSS12_FADE_DURATION = 0.3;
+      const PATTERN_BOSS12_ROTATION_SPEED = 0.25;
+      const BOSS_MAX_HP = 200;
+      const BOSS_DASH_DAMAGE = 10;
+      const BOSS_APPROACH_SPEED = BLOCK * 10;
+      const BOSS_PATTERN_ONE_CHARGE_SPEED = BLOCK * 30;
+      const BOSS04_THRUST_DISTANCE = BLOCK * 4;
+      const BOSS04_THRUST_SPEED = BLOCK * 30;
+      const BOSS04_THRUST_DURATION = BOSS04_THRUST_DISTANCE / BOSS04_THRUST_SPEED;
+      const BOSS04_ATTACK_INTERVAL = BOSS04_THRUST_DURATION;
+      const BOSS_PATTERN_ONE_STAB_COUNT = 5;
+      const BOSS_PARRY_MINION_COUNT = 2;
+      const BOSS_PARRY_MINION_SPAWN_DISTANCE = BLOCK * 12;
+      const BOSS_PARRY_STUN_BLINK_INTERVAL = 0.3;
+      const BOSS_PATTERN_TWO_LEAP_DURATION = 0.35;
+      const BOSS_PATTERN_TWO_AIM_DURATION = 0.5;
+      const BOSS_PATTERN_TWO_DIVE_DURATION = 0.3;
+      const BOSS_PATTERN_TWO_WAVE_SPEED = BLOCK * 40;
+      const BOSS03_VISIBLE_LEFT = 225 / 1024;
+      const BOSS04_VISIBLE_BOTTOM = 553 / 1024;
+      const BOSS17_VISIBLE_LEFT = 287 / 1024;
+      const BOSS17_VISIBLE_RIGHT = 717 / 1024;
+      const BOSS17_VISIBLE_TOP = 143 / 1024;
+      const BOSS17_VISIBLE_BOTTOM = 717 / 1024;
+      const BOSS17_WAVE_TILE_WIDTH = BLOCK * 8 * (BOSS17_VISIBLE_RIGHT - BOSS17_VISIBLE_LEFT);
+      const BOSS17_WAVE_TILE_HEIGHT = BLOCK * 8 * (BOSS17_VISIBLE_BOTTOM - BOSS17_VISIBLE_TOP);
+      const BOSS_PATTERN_TWO_TILES_PER_SIDE = 2;
+      const BOSS17_GROW_DURATION = 0.15;
+      const BOSS17_FADE_START = 0.6;
+      const BOSS17_FADE_DURATION = 0.3;
+      const BOSS_PATTERN_TWO_WAVE_LIFETIME = BOSS17_FADE_START + BOSS17_FADE_DURATION;
+      const BOSS_PATTERN_ONE_TRIGGER_DISTANCE = BLOCK * 20;
+      const BOSS_SIZE = BLOCK * 8;
+      const BOSS_SPRITE_HITBOX_SIZE = BLOCK * 3;
+      const PATTERN_BOSS_HITBOX_BOUNDS = {
+        13: { left: 317 / 1024, top: 277 / 1024, right: 707 / 1024, bottom: 685 / 1024 },
+        14: { left: 337 / 1024, top: 475 / 1024, right: 687 / 1024, bottom: 549 / 1024 }
+      };
+      const PATTERN_BOSS12_COLOR_BOTTOM = 654 / 1024;
+      const PATTERN_BOSS_COLOR_SPANS = {
+        13: {
+          8: [[13, 18]],
+          9: [[12, 19]],
+          10: [[11, 20]],
+          11: [[11, 20]],
+          12: [[10, 21]],
+          13: [[11, 11], [14, 17], [20, 20]],
+          14: [[11, 11], [15, 16], [20, 20]],
+          15: [[11, 11], [13, 13], [15, 16], [18, 18], [20, 20]],
+          16: [[10, 11], [16, 16], [20, 21]],
+          17: [[10, 14], [17, 21]],
+          18: [[10, 14], [17, 21]],
+          19: [[10, 11], [13, 18], [20, 21]],
+          20: [[13, 18]],
+          21: [[13, 18]]
+        },
+        14: {
+          15: [[13, 18]],
+          16: [[10, 21]]
+        }
+      };
       const keys = new Set();
+      const keyboardKeys = new Set();
+      const touchKeys = new Set();
       const sprites = Array.from({ length: 6 }, (_, index) => {
         const image = new Image();
         image.src = `플레이어움직임/${index}.png`;
+        return image;
+      });
+      const defenseSprites = [0, 1].map((index) => {
+        const image = new Image();
+        image.src = `방어/def${index}.png`;
         return image;
       });
       const monsterSprites = Array.from({ length: 4 }, (_, index) => {
@@ -225,12 +582,34 @@
         image.src = `몬스터 움직임/skull${index + 1}.png`;
         return image;
       });
+      const bossSprites = Array.from({ length: 15 }, (_, index) => {
+        const image = new Image();
+        image.src = `해골보스/boss${String(index).padStart(2, "0")}.png`;
+        return image;
+      });
+      const boss17Sprite = new Image();
+      boss17Sprite.src = "해골보스/boss17.png";
+      const patternBossSprites = [12, 13, 14].map((index) => bossSprites[index]);
       const monsterHitSound = new Audio("사운드/hit1.mp3");
       monsterHitSound.preload = "auto";
       const dashSound = new Audio("사운드/dash.mp3");
       dashSound.preload = "auto";
+      const damagedSound = new Audio("사운드/dmged.mp3");
+      damagedSound.preload = "auto";
+      const defenseSound = new Audio("사운드/defed.mp3");
+      defenseSound.preload = "auto";
+      const defenseBreakSound = new Audio("사운드/defbreaked.mp3");
+      defenseBreakSound.preload = "auto";
+      const parrySound = new Audio("사운드/ferryed.mp3");
+      parrySound.preload = "auto";
       const player = {
         hp: PLAYER_MAX_HP,
+        defenseHp: PLAYER_MAX_DEFENSE_HP,
+        defenseElapsed: PLAYER_PARRY_WINDOW,
+        defenseEffectElapsed: PLAYER_DEFENSE_EFFECT_DURATION,
+        defenseBreakElapsed: 0,
+        defenseBreakSoundPlayed: false,
+        parryUsed: false,
         x: BLOCK * 3,
         y: 0,
         width: BLOCK * 4,
@@ -260,7 +639,8 @@
         hitTargetX: 0,
         hitDirection: 0,
         shakeOffsetX: 0,
-        dashCooldown: 0
+        dashCooldown: 0,
+        dashInvulnerabilityElapsed: 0
       };
 
       const monster = {
@@ -273,6 +653,7 @@
         spawnFacing: -1,
         hp: MONSTER_MAX_HP,
         dead: false,
+        permanentlyDefeated: false,
         deathElapsed: 0,
         respawnElapsed: 0,
         facing: -1,
@@ -294,22 +675,78 @@
         boneThrown: false,
         projectiles: []
       };
+      const boss = {
+        x: 0,
+        y: 0,
+        spriteIndex: 2,
+        facing: -1,
+        hp: BOSS_MAX_HP,
+        maxHp: BOSS_MAX_HP,
+        phase: 1,
+        defeated: false,
+        pattern: "",
+        step: "",
+        cooldown: 0,
+        dashHitThisDash: false
+      };
 
       let viewWidth = 0;
       let viewHeight = 0;
       let cameraX = 0;
       let cameraInitialized = false;
+      let backgroundGradient = null;
       let previousTime = 0;
       let gameOver = false;
+      let monstersDefeated = 0;
+      let pattern6 = null;
+      let bossSpearAttack = null;
+      let bossPatternOneStabs = 0;
+      let bossPatternTwo = null;
+      let bossParryStreak = 0;
+      let bossParryStunElapsed = 0;
+      let bossParryStunBlinkElapsed = 0;
+      let bossParryMinions = [];
+
+      function pressInputKey(key, source) {
+        const sourceKeys = source === "keyboard" ? keyboardKeys : touchKeys;
+        sourceKeys.add(key);
+        keys.add(key);
+      }
+
+      function releaseInputKey(key, source) {
+        const sourceKeys = source === "keyboard" ? keyboardKeys : touchKeys;
+        sourceKeys.delete(key);
+        if (!keyboardKeys.has(key) && !touchKeys.has(key)) {
+          keys.delete(key);
+        }
+      }
+
+      function releaseInputKeys(...releasedKeys) {
+        for (const key of releasedKeys) {
+          keyboardKeys.delete(key);
+          touchKeys.delete(key);
+          keys.delete(key);
+        }
+      }
+
+      function clearInputKeys() {
+        keys.clear();
+        keyboardKeys.clear();
+        touchKeys.clear();
+      }
 
       function resize() {
         const bounds = canvas.getBoundingClientRect();
-        const pixelRatio = window.devicePixelRatio || 1;
+        const pixelRatio = Math.min(window.devicePixelRatio || 1, MAX_PIXEL_RATIO);
         viewWidth = bounds.width;
         viewHeight = bounds.height;
         canvas.width = Math.round(viewWidth * pixelRatio);
         canvas.height = Math.round(viewHeight * pixelRatio);
         context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+        backgroundGradient = context.createLinearGradient(0, 0, 0, viewHeight);
+        backgroundGradient.addColorStop(0, "#b8d7e5");
+        backgroundGradient.addColorStop(0.65, "#d0e1e7");
+        backgroundGradient.addColorStop(1, "#e1e5e3");
         if (player.y === 0) {
           player.x = Math.max(0, viewWidth / 2 - player.width / 2);
           player.y = floorY() - player.height;
@@ -334,22 +771,51 @@
         }
       }
 
+      function startGame(mode) {
+        if (gameStarted) return;
+        document.body.classList.remove("mode-not-selected", "computer-mode", "mobile-mode");
+        document.body.classList.add(mode === "mobile" ? "mobile-mode" : "computer-mode");
+        resize();
+        levelPlatforms = platforms();
+
+        player.x = Math.max(0, viewWidth / 2 - player.width / 2);
+        player.y = floorY() - player.height;
+        player.vx = 0;
+        player.vy = 0;
+        player.grounded = true;
+        resetBoss();
+
+        monster.y = floorY() - monster.height;
+        monster.x = Math.min(
+          WORLD_WIDTH - monster.width,
+          viewWidth + BLOCK * 2
+        );
+        monster.spawnX = monster.x;
+        monster.spawnY = monster.y;
+        monster.facing = -1;
+        monster.spawnFacing = monster.facing;
+
+        cameraX = Math.max(
+          0,
+          Math.min(WORLD_WIDTH - viewWidth, player.x + player.width / 2 - viewWidth / 2)
+        );
+        cameraInitialized = true;
+        previousTime = 0;
+        gameStarted = true;
+        modeSelection.hidden = true;
+        draw();
+      }
+
       function floorY() {
         return viewHeight - 56;
       }
 
       function platforms() {
-        const floor = floorY();
-        const items = [];
-        for (let block = 12; block < MAP_BLOCKS - 8; block += 20) {
-          items.push({
-            x: block * BLOCK,
-            y: floor - BLOCK * 3,
-            width: BLOCK * 10,
-            height: BLOCK * 0.25
-          });
-        }
-        return items;
+        return [];
+      }
+
+      function bossGroundCenterY() {
+        return floorY() - BOSS_SIZE * (SPRITE_VISIBLE_BOTTOM - 0.5);
       }
 
       function isStandingOnSurface() {
@@ -369,13 +835,17 @@
       let levelPlatforms = [];
 
       function startDash() {
-        if (player.dashCooldown > 0 || player.dashElapsed > 0) return;
+        if (player.dashCooldown > 0
+          || player.dashElapsed > 0
+          || player.defenseBreakElapsed > 0
+          || isDefenseHeld()) return;
         dashSound.currentTime = 0;
         dashSound.play().catch((error) => {
           console.error("돌진 소리를 재생하지 못했습니다.", error);
         });
         player.dashStartX = player.x;
         player.dashDirection = player.facing;
+        boss.dashHitThisDash = false;
         player.dashElapsed = 0.000001;
         player.dashActiveThisFrame = false;
         player.dashHitbox = null;
@@ -390,13 +860,13 @@
       }
 
       function jump() {
-        if (!player.grounded) return;
+        if (!player.grounded || player.defenseBreakElapsed > 0) return;
         player.vy = JUMP_SPEED;
         player.grounded = false;
       }
 
       function dropThroughPlatform() {
-        if (!player.grounded) return;
+        if (!player.grounded || player.defenseBreakElapsed > 0) return;
         const platform = levelPlatforms.find((item) => {
           const overlaps = player.x + player.width > item.x
             && player.x < item.x + item.width;
@@ -412,7 +882,9 @@
       function handleInput() {
         if (player.dashElapsed > 0) return;
         player.vx = 0;
-        const moveSpeed = player.grounded ? WALK_SPEED : AIR_SPEED;
+        const defenseSlowdown = isDefenseHeld() ? 0.5 : 1;
+        const moveSpeed = (player.grounded ? WALK_SPEED : AIR_SPEED) * defenseSlowdown;
+        if (player.defenseBreakElapsed > 0) return;
         if (keys.has("ArrowLeft")) {
           player.vx = -moveSpeed;
           player.facing = -1;
@@ -428,6 +900,43 @@
           && first.x + first.width > second.x
           && first.y < second.y + second.height
           && first.y + first.height > second.y;
+      }
+
+      function getDefenseShieldHitbox() {
+        const playerHitbox = getPlayerHitbox();
+        const shieldSize = player.width * 1.5;
+        return {
+          x: playerHitbox.x + playerHitbox.width / 2 - shieldSize / 2,
+          y: playerHitbox.y + playerHitbox.height / 2 - shieldSize / 2,
+          width: shieldSize,
+          height: shieldSize
+        };
+      }
+
+      function isDefenseEdgeContact(attackHitbox) {
+        if (!attackHitbox) return false;
+        const shieldHitbox = getDefenseShieldHitbox();
+        return DEFENSE_SHIELD_BANDS.some((band) => {
+          const coloredArea = {
+            x: shieldHitbox.x + shieldHitbox.width * band.left,
+            y: shieldHitbox.y + shieldHitbox.height * band.top,
+            width: shieldHitbox.width * (band.right - band.left),
+            height: shieldHitbox.height * (band.bottom - band.top)
+          };
+          return overlaps(attackHitbox, coloredArea);
+        });
+      }
+
+      function isDefenseHeld() {
+        return keys.has("x") || keys.has("X");
+      }
+
+      function playSound(audio, message, playbackRate = 1) {
+        audio.currentTime = 0;
+        audio.playbackRate = playbackRate;
+        audio.play().catch((error) => {
+          console.error(message, error);
+        });
       }
 
       function getPlayerHitbox() {
@@ -511,6 +1020,595 @@
         monster.boneThrown = true;
       }
 
+      function resetBoss() {
+        bossSpearAttack = null;
+        bossPatternOneStabs = 0;
+        bossPatternTwo = null;
+        Object.assign(boss, {
+          x: player.x + player.width / 2,
+          y: bossGroundCenterY(),
+          spriteIndex: 2,
+          facing: -1,
+          hp: BOSS_MAX_HP,
+          maxHp: BOSS_MAX_HP,
+          phase: 1,
+          active: false,
+          defeated: false,
+          pattern: "",
+          step: "",
+          cooldown: 0,
+          dashHitThisDash: false
+        });
+        teleportBossAwayFromPlayer(BOSS_PATTERN_ONE_TRIGGER_DISTANCE);
+      }
+
+      function spawnBoss() {
+        boss.active = true;
+        boss.hp = BOSS_MAX_HP;
+        boss.maxHp = BOSS_MAX_HP;
+        boss.phase = 1;
+        boss.spriteIndex = 2;
+        boss.x = player.x + player.width / 2;
+        teleportBossAwayFromPlayer(BOSS_PATTERN_ONE_TRIGGER_DISTANCE);
+        boss.y = bossGroundCenterY();
+        boss.facing = player.x + player.width / 2 < boss.x ? -1 : 1;
+        boss.cooldown = 0;
+        bossSpearAttack = null;
+        bossPatternOneStabs = 0;
+        bossPatternTwo = null;
+      }
+
+      function enterBossFight() {
+        if (boss.active) return;
+        monstersDefeated = 3;
+        monster.hp = 0;
+        monster.dead = true;
+        monster.permanentlyDefeated = true;
+        monster.deathElapsed = MONSTER_DEATH_FADE_DURATION;
+        monster.projectiles = [];
+        monster.pendingHitElapsed = 0;
+        spawnBoss();
+      }
+
+      function bossPatternSprite(spriteIndex) {
+        return spriteIndex;
+      }
+
+      function startBossPattern(pattern, step) {
+        boss.pattern = pattern;
+        boss.step = step;
+      }
+
+      function getBossHitbox() {
+        return {
+          x: boss.x - BOSS_SPRITE_HITBOX_SIZE / 2,
+          y: boss.y - BOSS_SPRITE_HITBOX_SIZE / 2,
+          width: BOSS_SPRITE_HITBOX_SIZE,
+          height: BOSS_SPRITE_HITBOX_SIZE
+        };
+      }
+
+      function startBossSpearAttack() {
+        bossSpearAttack = {
+          elapsed: 0,
+          verticalOffset: (Math.floor(Math.random() * 3) - 1) * BLOCK,
+          hitApplied: false
+        };
+      }
+
+      function updateBossSpearAttack(delta) {
+        if (!bossSpearAttack) startBossSpearAttack();
+        bossSpearAttack.elapsed += delta;
+        const thrustProgress = Math.min(
+          1,
+          bossSpearAttack.elapsed / BOSS04_THRUST_DURATION
+        );
+        const thrustLength = BOSS04_THRUST_DISTANCE * thrustProgress;
+        const hitbox = {
+          x: boss.facing > 0 ? boss.x : boss.x - thrustLength,
+          y: boss.y + bossSpearAttack.verticalOffset - BLOCK / 2,
+          width: thrustLength,
+          height: BLOCK
+        };
+        if (!bossSpearAttack.hitApplied
+          && thrustLength > 0
+          && hitPlayerWithBossAttack(hitbox, 5)) {
+          bossSpearAttack.hitApplied = true;
+        }
+
+        while (bossSpearAttack.elapsed >= BOSS04_ATTACK_INTERVAL) {
+          const remainingElapsed = bossSpearAttack.elapsed - BOSS04_ATTACK_INTERVAL;
+          bossPatternOneStabs += 1;
+          if (bossPatternOneStabs >= BOSS_PATTERN_ONE_STAB_COUNT) return true;
+          startBossSpearAttack();
+          bossSpearAttack.elapsed = remainingElapsed;
+        }
+        return false;
+      }
+
+      function moveBossTowardPlayer(
+        playerCenter,
+        stopDistance,
+        delta,
+        speed = BOSS_APPROACH_SPEED
+      ) {
+        const targetX = Math.max(
+          BOSS_SIZE / 2,
+          Math.min(
+            WORLD_WIDTH - BOSS_SIZE / 2,
+            playerCenter - boss.facing * stopDistance
+          )
+        );
+        const distanceToTarget = targetX - boss.x;
+        boss.x += Math.sign(distanceToTarget)
+          * Math.min(Math.abs(distanceToTarget), speed * delta);
+      }
+
+      function damageBoss(amount) {
+        if (boss.defeated || amount <= 0) return;
+        boss.hp = Math.max(0, boss.hp - amount);
+        if (boss.hp === 0) {
+          boss.defeated = true;
+          boss.pattern = "";
+          boss.step = "";
+          bossPatternTwo = null;
+          bossSpearAttack = null;
+        }
+      }
+
+      function hitPlayerWithBossAttack(hitbox, damage) {
+        if (overlaps(hitbox, getPlayerHitbox())) {
+          damagePlayer(damage, 0, true);
+          return true;
+        }
+        return false;
+      }
+
+      function startBossPatternOne() {
+        boss.spriteIndex = bossPatternSprite(2);
+        boss.facing = player.x + player.width / 2 < boss.x ? -1 : 1;
+        bossPatternOneStabs = 0;
+        startBossPattern("pattern1", "approach");
+      }
+
+      function teleportBossAwayFromPlayer(distance) {
+        const playerCenter = player.x + player.width / 2;
+        const minBossX = BOSS_SIZE / 2;
+        const maxBossX = WORLD_WIDTH - BOSS_SIZE / 2;
+        const leftX = playerCenter - distance;
+        const rightX = playerCenter + distance;
+        const preferredDirection = boss.x < playerCenter ? -1 : 1;
+        const preferredX = preferredDirection < 0 ? leftX : rightX;
+        const alternateX = preferredDirection < 0 ? rightX : leftX;
+        const preferredIsAvailable = preferredX >= minBossX && preferredX <= maxBossX;
+        const alternateIsAvailable = alternateX >= minBossX && alternateX <= maxBossX;
+
+        if (preferredIsAvailable) {
+          boss.x = preferredX;
+        } else if (alternateIsAvailable) {
+          boss.x = alternateX;
+        } else {
+          boss.x = Math.abs(playerCenter - minBossX) >= Math.abs(maxBossX - playerCenter)
+            ? minBossX
+            : maxBossX;
+        }
+      }
+
+      function startBossPatternTwo() {
+        const playerCenterX = player.x + player.width / 2;
+        const playerCenterY = player.y + player.height / 2;
+        const targetY = playerCenterY - BLOCK * 9;
+        const diveStartX = playerCenterX - BOSS_SIZE * 0.75;
+        const diveEndY = floorY() + BOSS_SIZE * 0.5;
+        const diveProgressAtTarget = (playerCenterY - targetY) / (diveEndY - targetY);
+        bossPatternTwo = {
+          targetX: playerCenterX,
+          playerY: playerCenterY,
+          targetY,
+          diveStartX,
+          diveStartY: targetY,
+          diveEndX: diveStartX + (playerCenterX - diveStartX) / diveProgressAtTarget,
+          diveEndY,
+          groundY: floorY(),
+          originY: boss.y,
+          elapsed: 0,
+          wavePairs: []
+        };
+        bossSpearAttack = null;
+        startBossPattern("pattern2", "pattern2-leap");
+      }
+
+      function createBossPatternTwoWavePair() {
+        bossPatternTwo.wavePairs.push({
+          elapsed: 0,
+          tiles: Array.from(
+            { length: BOSS_PATTERN_TWO_TILES_PER_SIDE * 2 + 1 },
+            (_, index) => {
+              const offset = index - BOSS_PATTERN_TWO_TILES_PER_SIDE;
+              const delay = Math.abs(offset) * BOSS17_WAVE_TILE_WIDTH
+                / BOSS_PATTERN_TWO_WAVE_SPEED;
+              return {
+                x: bossPatternTwo.targetX + offset * BOSS17_WAVE_TILE_WIDTH,
+                delay,
+                elapsed: -delay
+              };
+            }
+          ),
+          hitPlayer: false
+        });
+      }
+
+      function updateBossPatternTwoWaves(delta) {
+        const playerHitbox = getPlayerHitbox();
+        for (const pair of bossPatternTwo.wavePairs) {
+          pair.elapsed += delta;
+          for (const tile of pair.tiles) {
+            tile.elapsed = pair.elapsed - tile.delay;
+            if (tile.elapsed < 0 || tile.elapsed >= BOSS_PATTERN_TWO_WAVE_LIFETIME) continue;
+            const scale = tile.elapsed < BOSS17_GROW_DURATION
+              ? 0.5 + 0.5 * (tile.elapsed / BOSS17_GROW_DURATION)
+              : 1;
+            const visibleHeight = BOSS17_WAVE_TILE_HEIGHT * scale;
+            const hitbox = {
+              x: tile.x - BOSS17_WAVE_TILE_WIDTH / 2,
+              y: bossPatternTwo.groundY - visibleHeight,
+              width: BOSS17_WAVE_TILE_WIDTH,
+              height: visibleHeight
+            };
+            if (!pair.hitPlayer && overlaps(hitbox, playerHitbox)) {
+              pair.hitPlayer = true;
+              damagePlayer(5, 0, true);
+            }
+          }
+        }
+      }
+
+      function bossPatternTwoWavesComplete() {
+        return bossPatternTwo.wavePairs.length === 1
+          && bossPatternTwo.wavePairs.every((pair) => pair.tiles.every((tile) => (
+            pair.elapsed - tile.delay >= BOSS_PATTERN_TWO_WAVE_LIFETIME
+          )));
+      }
+
+      function updateBossPatternTwo(delta) {
+        bossPatternTwo.elapsed += delta;
+        switch (boss.step) {
+          case "pattern2-leap": {
+            const progress = Math.min(
+              1,
+              bossPatternTwo.elapsed / BOSS_PATTERN_TWO_LEAP_DURATION
+            );
+            boss.y = bossPatternTwo.originY - progress * (viewHeight + BOSS_SIZE);
+            if (progress >= 1) {
+              boss.y = bossPatternTwo.originY;
+              boss.step = "pattern2-aim";
+              bossPatternTwo.elapsed = 0;
+            }
+            break;
+          }
+          case "pattern2-aim":
+            if (bossPatternTwo.elapsed >= BOSS_PATTERN_TWO_AIM_DURATION) {
+              boss.step = "pattern2-dive";
+              bossPatternTwo.elapsed = 0;
+            }
+            break;
+          case "pattern2-dive":
+            if (bossPatternTwo.elapsed >= BOSS_PATTERN_TWO_DIVE_DURATION) {
+              boss.step = "pattern2-impact";
+              bossPatternTwo.elapsed = 0;
+              bossPatternTwo.groundY = floorY();
+            }
+            break;
+          case "pattern2-impact":
+            if (bossPatternTwo.wavePairs.length === 0
+              && bossPatternTwo.elapsed >= BOSS17_GROW_DURATION) {
+              createBossPatternTwoWavePair();
+            }
+            updateBossPatternTwoWaves(delta);
+            if (bossPatternTwo.elapsed >= BOSS17_FADE_START + BOSS17_FADE_DURATION
+              && bossPatternTwoWavesComplete()) {
+              boss.step = "pattern2-return";
+              bossPatternTwo.elapsed = 0;
+            }
+            break;
+          case "pattern2-return":
+            if (bossPatternTwo.elapsed >= 0.3) {
+              teleportBossAwayFromPlayer(BLOCK * 20);
+              boss.y = bossGroundCenterY();
+              bossPatternTwo = null;
+              startBossPatternOne();
+            }
+            break;
+          default:
+            boss.pattern = "";
+            boss.step = "";
+            bossPatternTwo = null;
+            break;
+        }
+      }
+
+      function startPattern6() {
+        if (pattern6) return;
+        const playerCenterX = player.x + player.width / 2;
+        const playerCenterY = player.y + player.height / 2;
+        pattern6 = {
+          phase: "target",
+          elapsed: 0,
+          originX: playerCenterX,
+          originY: playerCenterY,
+          bosses: [
+            { spriteIndex: 1, x: playerCenterX, y: playerCenterY - PATTERN_BOSS_VERTICAL_GAP / 2 },
+            { spriteIndex: 2, x: playerCenterX, y: playerCenterY + PATTERN_BOSS_VERTICAL_GAP / 2 }
+          ]
+        };
+      }
+
+      function patternBossColorAreasTouch(firstBoss, secondBoss) {
+        const cellSize = PATTERN_BOSS_SIZE / 32;
+        const firstRows = PATTERN_BOSS_COLOR_SPANS[firstBoss.spriteIndex + 12];
+        const secondRows = PATTERN_BOSS_COLOR_SPANS[secondBoss.spriteIndex + 12];
+        const firstLeft = firstBoss.x + (firstBoss.shakeOffsetX || 0) - PATTERN_BOSS_SIZE / 2;
+        const firstTop = firstBoss.y - PATTERN_BOSS_SIZE / 2;
+        const secondLeft = secondBoss.x + (secondBoss.shakeOffsetX || 0) - PATTERN_BOSS_SIZE / 2;
+        const secondTop = secondBoss.y - PATTERN_BOSS_SIZE / 2;
+
+        for (const [firstRow, firstSpans] of Object.entries(firstRows)) {
+          const firstY = firstTop + Number(firstRow) * cellSize;
+          for (const [firstStart, firstEnd] of firstSpans) {
+            const firstX = firstLeft + firstStart * cellSize;
+            const firstRight = firstLeft + (firstEnd + 1) * cellSize;
+            for (const [secondRow, secondSpans] of Object.entries(secondRows)) {
+              const secondY = secondTop + Number(secondRow) * cellSize;
+              if (firstY >= secondY + cellSize || firstY + cellSize <= secondY) continue;
+              for (const [secondStart, secondEnd] of secondSpans) {
+                const secondX = secondLeft + secondStart * cellSize;
+                const secondRight = secondLeft + (secondEnd + 1) * cellSize;
+                if (firstX < secondRight && firstRight > secondX) return true;
+              }
+            }
+          }
+        }
+        return false;
+      }
+
+      function getPatternBossHitbox(boss) {
+        const bounds = PATTERN_BOSS_HITBOX_BOUNDS[boss.spriteIndex + 12];
+        const spriteLeft = boss.x + (boss.shakeOffsetX || 0) - PATTERN_BOSS_SIZE / 2;
+        const spriteTop = boss.y - PATTERN_BOSS_SIZE / 2;
+        return {
+          x: spriteLeft + PATTERN_BOSS_SIZE * bounds.left,
+          y: spriteTop + PATTERN_BOSS_SIZE * bounds.top,
+          width: PATTERN_BOSS_SIZE * (bounds.right - bounds.left),
+          height: PATTERN_BOSS_SIZE * (bounds.bottom - bounds.top)
+        };
+      }
+
+      function updatePattern6(delta) {
+        if (!pattern6) return;
+        pattern6.elapsed += delta;
+        if (pattern6.phase === "target" || pattern6.phase === "strike") {
+          const playerHitbox = getPlayerHitbox();
+          const attackingBoss = pattern6.bosses.find((boss) => {
+            const bossHitbox = getPatternBossHitbox(boss);
+            const edgeContact = isDefenseHeld() && isDefenseEdgeContact(bossHitbox);
+            return overlaps(bossHitbox, playerHitbox) || edgeContact;
+          });
+          if (attackingBoss) {
+            damagePlayer(PATTERN_BOSS_DAMAGE, 0, true);
+          }
+        }
+        if (pattern6.phase === "target") {
+          const leftBoss = pattern6.bosses.find((boss) => boss.spriteIndex === 1);
+          const rightBoss = pattern6.bosses.find((boss) => boss.spriteIndex === 2);
+          if (!leftBoss || !rightBoss) return;
+
+          pattern6.originX = player.x + player.width / 2;
+          leftBoss.shakeOffsetX = Math.sin(pattern6.elapsed * PATTERN_BOSS13_SHAKE_SPEED)
+            * PATTERN_BOSS13_SHAKE_AMPLITUDE;
+          leftBoss.x = pattern6.originX;
+          rightBoss.x = pattern6.originX;
+          if (pattern6.elapsed >= PATTERN_BOSS_TARGET_DURATION) {
+            leftBoss.shakeOffsetX = 0;
+            pattern6.phase = "strike";
+            pattern6.elapsed = 0;
+          }
+        } else if (pattern6.phase === "strike") {
+          const leftBoss = pattern6.bosses.find((boss) => boss.spriteIndex === 1);
+          const rightBoss = pattern6.bosses.find((boss) => boss.spriteIndex === 2);
+          if (!leftBoss || !rightBoss) return;
+
+          const rightTargetY = floorY()
+            + PATTERN_BOSS_SIZE / 2
+            - PATTERN_BOSS_SIZE * PATTERN_BOSS14_COLOR_BOTTOM;
+          const cellSize = PATTERN_BOSS_SIZE / 32;
+          const leftTargetY = rightTargetY
+            - cellSize * (22 - 15)
+            + cellSize * 0.1;
+          let remaining = delta;
+          const substepDuration = (cellSize / 2) / PATTERN_BOSS_APPROACH_SPEED;
+          while (remaining > 0) {
+            const step = Math.min(remaining, substepDuration);
+            const leftDistance = leftTargetY - leftBoss.y;
+            const rightDistance = rightTargetY - rightBoss.y;
+            leftBoss.y += Math.sign(leftDistance)
+              * Math.min(Math.abs(leftDistance), PATTERN_BOSS_APPROACH_SPEED * step);
+            rightBoss.y += Math.sign(rightDistance)
+              * Math.min(Math.abs(rightDistance), PATTERN_BOSS_APPROACH_SPEED * step);
+            remaining -= step;
+
+            if (patternBossColorAreasTouch(leftBoss, rightBoss)) {
+              leftBoss.y = leftTargetY;
+              rightBoss.y = rightTargetY;
+              pattern6.phase = "fade";
+              pattern6.elapsed = 0;
+              break;
+            }
+          }
+        } else if (pattern6.phase === "fade" && pattern6.elapsed >= PATTERN_BOSS_FADE_DURATION) {
+          pattern6.phase = "boss12";
+          pattern6.elapsed = 0;
+        } else if (
+          pattern6.phase === "boss12"
+          && pattern6.elapsed >= PATTERN_BOSS12_DURATION
+        ) {
+          pattern6 = null;
+        }
+      }
+
+      function updateBoss(delta) {
+        if (!boss.active || boss.defeated) return;
+
+        if (bossParryStunElapsed > 0) {
+          bossParryStunElapsed = Math.max(0, bossParryStunElapsed - delta);
+          bossParryStunBlinkElapsed += delta;
+          if (bossParryStunElapsed > 0) {
+            bossSpearAttack = null;
+            return;
+          }
+          bossParryStunBlinkElapsed = 0;
+        }
+
+        boss.cooldown = Math.max(0, boss.cooldown - delta);
+        if (boss.defeated) return;
+
+        if (boss.pattern === "pattern2") {
+          updateBossPatternTwo(delta);
+          boss.x = Math.max(BOSS_SIZE / 2, Math.min(WORLD_WIDTH - BOSS_SIZE / 2, boss.x));
+          return;
+        }
+
+        if (player.dashHitbox && !boss.dashHitThisDash && overlaps(player.dashHitbox, getBossHitbox())) {
+          boss.dashHitThisDash = true;
+          damageBoss(BOSS_DASH_DAMAGE);
+          if (boss.defeated) return;
+        }
+
+        if (!boss.pattern) {
+          if (boss.cooldown === 0) {
+            const distance = Math.abs(
+              (player.x + player.width / 2) - boss.x
+            );
+            if (distance >= BOSS_PATTERN_ONE_TRIGGER_DISTANCE) {
+              startBossPatternOne();
+            }
+          }
+          if (!boss.pattern) {
+            const playerCenter = player.x + player.width / 2;
+            boss.facing = playerCenter < boss.x ? -1 : 1;
+            moveBossTowardPlayer(playerCenter, BOSS04_THRUST_DISTANCE, delta);
+          }
+        }
+        if (!boss.pattern) return;
+
+        switch (boss.step) {
+          case "approach": {
+            boss.spriteIndex = bossPatternSprite(2);
+            const playerCenter = player.x + player.width / 2;
+            const distance = Math.abs(playerCenter - boss.x);
+            boss.facing = playerCenter < boss.x ? -1 : 1;
+            if (distance <= BOSS04_THRUST_DISTANCE) {
+              boss.step = "barrage";
+              startBossSpearAttack();
+            } else {
+              moveBossTowardPlayer(
+                playerCenter,
+                BOSS04_THRUST_DISTANCE,
+                delta,
+                BOSS_PATTERN_ONE_CHARGE_SPEED
+              );
+            }
+            break;
+          }
+          case "barrage": {
+            const playerCenter = player.x + player.width / 2;
+            boss.facing = playerCenter < boss.x ? -1 : 1;
+            moveBossTowardPlayer(playerCenter, BOSS04_THRUST_DISTANCE, delta);
+            if (updateBossSpearAttack(delta)) startBossPatternTwo();
+            if (bossParryStunElapsed > 0) {
+              bossSpearAttack = null;
+              return;
+            }
+            break;
+          }
+          default:
+            boss.pattern = "";
+            boss.step = "";
+            break;
+        }
+
+        boss.x = Math.max(BOSS_SIZE / 2, Math.min(WORLD_WIDTH - BOSS_SIZE / 2, boss.x));
+      }
+
+      function spawnBossParryMinions() {
+        const playerCenter = player.x + player.width / 2;
+        for (let index = 0; index < BOSS_PARRY_MINION_COUNT; index += 1) {
+          const direction = index === 0 ? -1 : 1;
+          const x = Math.max(
+            0,
+            Math.min(
+              WORLD_WIDTH - MONSTER_SIZE,
+              playerCenter + direction * BOSS_PARRY_MINION_SPAWN_DISTANCE - MONSTER_SIZE / 2
+            )
+          );
+          bossParryMinions.push({
+            x,
+            y: floorY() - MONSTER_SIZE,
+            facing: playerCenter < x + MONSTER_SIZE / 2 ? -1 : 1,
+            attackCooldown: 0.5,
+            alive: true
+          });
+        }
+      }
+
+      function getBossParryMinionHitbox(minion) {
+        return {
+          x: minion.x + MONSTER_SIZE * MONSTER_ART_LEFT_X,
+          y: minion.y + MONSTER_SIZE * (1 - SPRITE_VISIBLE_BOTTOM)
+            + MONSTER_SIZE * MONSTER_ART_TOP_Y,
+          width: MONSTER_SIZE * (MONSTER_ART_RIGHT_X - MONSTER_ART_LEFT_X),
+          height: MONSTER_SIZE * (MONSTER_ART_BOTTOM_Y - MONSTER_ART_TOP_Y)
+        };
+      }
+
+      function updateBossParryMinions(delta) {
+        const playerHitbox = getPlayerHitbox();
+        for (const minion of bossParryMinions) {
+          if (!minion.alive) continue;
+          minion.attackCooldown = Math.max(0, minion.attackCooldown - delta);
+          const minionHitbox = getBossParryMinionHitbox(minion);
+          const horizontalGap = Math.max(
+            0,
+            minionHitbox.x - (playerHitbox.x + playerHitbox.width),
+            playerHitbox.x - (minionHitbox.x + minionHitbox.width)
+          );
+          const verticalOverlap = playerHitbox.y < minionHitbox.y + minionHitbox.height
+            && playerHitbox.y + playerHitbox.height > minionHitbox.y;
+
+          if (player.dashActiveThisFrame
+            && player.dashHitbox
+            && overlaps(player.dashHitbox, minionHitbox)) {
+            minion.alive = false;
+            player.dashActiveThisFrame = false;
+            player.dashHitbox = null;
+            continue;
+          }
+
+          const horizontalDistance = player.x + player.width / 2
+            - (minion.x + MONSTER_SIZE / 2);
+          if (horizontalDistance !== 0) minion.facing = Math.sign(horizontalDistance);
+          if (horizontalGap <= MONSTER_MELEE_RANGE && verticalOverlap) {
+            if (minion.attackCooldown === 0) {
+              damagePlayer(MONSTER_DAMAGE, minion.facing);
+              minion.attackCooldown = MONSTER_MELEE_COOLDOWN;
+            }
+          } else {
+            minion.x += minion.facing * MONSTER_SPEED * delta;
+            minion.x = Math.max(0, Math.min(WORLD_WIDTH - MONSTER_SIZE, minion.x));
+          }
+        }
+        bossParryMinions = bossParryMinions.filter((minion) => minion.alive);
+      }
+
       function hitMonster(direction) {
         monsterHitSound.currentTime = 0;
         monsterHitSound.play().catch((error) => {
@@ -520,10 +1618,13 @@
         if (monster.hp === 0) {
           monster.dead = true;
           monster.deathElapsed = 0;
-          monster.respawnElapsed = MONSTER_RESPAWN_DELAY;
+          monstersDefeated += 1;
+          monster.permanentlyDefeated = monstersDefeated >= 3;
+          monster.respawnElapsed = monster.permanentlyDefeated ? 0 : MONSTER_RESPAWN_DELAY;
           monster.projectiles = [];
           monster.pendingHitElapsed = 0;
           monster.shakeOffsetX = 0;
+          if (monster.permanentlyDefeated) spawnBoss();
           return;
         }
         player.hitStopElapsed = PLAYER_MONSTER_HIT_STOP_DURATION;
@@ -558,12 +1659,14 @@
             MONSTER_DEATH_FADE_DURATION,
             monster.deathElapsed + delta
           );
+          if (monster.permanentlyDefeated) return;
           monster.respawnElapsed = Math.max(0, monster.respawnElapsed - delta);
           if (monster.respawnElapsed === 0) {
             monster.x = monster.spawnX;
             monster.y = monster.spawnY;
             monster.hp = MONSTER_MAX_HP;
             monster.dead = false;
+            monster.permanentlyDefeated = false;
             monster.deathElapsed = 0;
             monster.mode = "approach";
             monster.modeElapsed = 0;
@@ -718,7 +1821,8 @@
             + (projectile.targetY - projectile.startY) * progress
             - Math.sin(Math.PI * progress) * projectile.arcHeight;
           const hitbox = boneVisibleHitbox(projectile, progress);
-          if (overlaps(hitbox, getPlayerHitbox())) {
+          if (overlaps(hitbox, getPlayerHitbox())
+            || (isDefenseHeld() && isDefenseEdgeContact(hitbox))) {
             damagePlayer(MONSTER_DAMAGE);
             projectile.elapsed = projectile.duration;
             projectile.hitPlayer = true;
@@ -729,12 +1833,68 @@
         );
       }
 
-      function damagePlayer(amount, knockbackDirection = 0) {
-        if (gameOver || player.hitElapsed > 0 || player.hp <= 0) return;
+      function damagePlayer(amount, knockbackDirection = 0, bossAttack = false) {
+        if (gameOver
+          || player.hitElapsed > 0
+          || player.hp <= 0
+          || player.dashInvulnerabilityElapsed > 0) return;
+        if (player.defenseBreakElapsed <= 0) {
+          if (isDefenseHeld()
+            && player.defenseElapsed <= PLAYER_PARRY_WINDOW
+            && !player.parryUsed) {
+            player.parryUsed = true;
+            playSound(parrySound, "패링 소리를 재생하지 못했습니다.");
+            if (bossAttack) {
+              bossParryStreak += 1;
+              if (bossParryStreak >= 5) {
+                bossParryStreak = 0;
+                bossParryStunElapsed = 3;
+                bossParryStunBlinkElapsed = 0;
+                spawnBossParryMinions();
+              }
+            } else {
+              bossParryStreak = 0;
+            }
+            return;
+          }
+          bossParryStreak = 0;
+          if (isDefenseHeld() && player.defenseHp > 0) {
+            player.defenseHp = Math.max(0, player.defenseHp - amount);
+            if (player.defenseHp === 0) {
+              player.defenseBreakElapsed = PLAYER_DEFENSE_BREAK_DURATION;
+              player.defenseBreakSoundPlayed = true;
+              playSound(defenseBreakSound, "방어 파괴 소리를 재생하지 못했습니다.");
+              player.defenseEffectElapsed = 0;
+              releaseInputKeys("x", "X");
+              player.vx = 0;
+              player.dashElapsed = 0;
+              player.dashActiveThisFrame = false;
+              player.dashHitbox = null;
+              player.hitElapsed = PLAYER_DEFENSE_BREAK_DURATION;
+              player.hitPhase = "shake";
+              player.hitPhaseElapsed = 0;
+              player.hitDirection = knockbackDirection;
+              player.hitStartX = player.x;
+              player.hitTargetX = Math.max(
+                0,
+                Math.min(
+                  WORLD_WIDTH - player.width,
+                  player.x + knockbackDirection * MONSTER_KNOCKBACK_DISTANCE
+                )
+              );
+              player.shakeOffsetX = 0;
+            } else {
+              playSound(defenseSound, "방어 소리를 재생하지 못했습니다.", 0.8);
+            }
+            return;
+          }
+        }
+        bossParryStreak = 0;
         player.hp = Math.max(0, player.hp - amount);
+        playSound(damagedSound, "피격 소리를 재생하지 못했습니다.");
         if (player.hp === 0) {
           gameOver = true;
-          keys.clear();
+          clearInputKeys();
           gameOverOverlay.hidden = false;
           return;
         }
@@ -760,6 +1920,26 @@
       function update(delta) {
         if (gameOver) return;
         player.dashCooldown = Math.max(0, player.dashCooldown - delta);
+        player.dashInvulnerabilityElapsed = Math.max(
+          0,
+          player.dashInvulnerabilityElapsed - delta
+        );
+        player.defenseElapsed += delta;
+        if (!isDefenseHeld()) {
+          player.defenseEffectElapsed = Math.min(
+            PLAYER_DEFENSE_EFFECT_DURATION,
+            player.defenseEffectElapsed + delta
+          );
+        }
+        player.defenseBreakElapsed = Math.max(0, player.defenseBreakElapsed - delta);
+        if (player.defenseHp < PLAYER_MAX_DEFENSE_HP
+          && player.defenseBreakElapsed === 0
+          && !isDefenseHeld()) {
+          player.defenseHp = Math.min(
+            PLAYER_MAX_DEFENSE_HP,
+            player.defenseHp + PLAYER_DEFENSE_REGEN * delta
+          );
+        }
         player.hitElapsed = Math.max(0, player.hitElapsed - delta);
         if (player.hitPhase !== "") {
           player.hitPhaseElapsed += delta;
@@ -798,7 +1978,7 @@
           player.hitStopElapsed = Math.max(0, player.hitStopElapsed - delta);
           player.vx = 0;
           if (!player.grounded) {
-            player.vy += GRAVITY * delta;
+            player.vy += (player.vy >= 0 ? PLAYER_FALL_GRAVITY : GRAVITY) * delta;
             player.y += player.vy * delta;
           }
         } else {
@@ -839,7 +2019,8 @@
             }
             if (player.dashElapsed >= DASH_TIME) {
               player.dashElapsed = 0;
-              player.dashCooldown = 0.25;
+              player.dashCooldown = DASH_COOLDOWN;
+              player.dashInvulnerabilityElapsed = DASH_INVULNERABILITY_DURATION;
               player.dashEffectElapsed = 0.000001;
               player.slowElapsed = 0.000001;
               player.slowMovementElapsed = 0;
@@ -860,7 +2041,7 @@
               }
             }
             if (!player.grounded) {
-              player.vy += GRAVITY * delta;
+              player.vy += (player.vy >= 0 ? PLAYER_FALL_GRAVITY : GRAVITY) * delta;
               player.y += player.vy * delta;
             }
           }
@@ -891,6 +2072,9 @@
           }
         }
         updateMonster(delta);
+        updateBoss(delta);
+        updateBossParryMinions(delta);
+        updatePattern6(delta);
         const dashOffset = player.dashElapsed > 0
           ? player.dashDirection * DASH_CAMERA_OFFSET
           : 0;
@@ -915,65 +2099,26 @@
       }
 
       function drawBackground() {
-        const sky = context.createLinearGradient(0, 0, 0, viewHeight);
-        sky.addColorStop(0, "#b8d7e5");
-        sky.addColorStop(0.65, "#d0e1e7");
-        sky.addColorStop(1, "#e1e5e3");
-        context.fillStyle = sky;
+        context.fillStyle = backgroundGradient;
         context.fillRect(0, 0, viewWidth, viewHeight);
 
         const cloudUnit = BLOCK / 2;
-        const cloudPositions = [];
+        context.save();
+        context.globalAlpha = 0.48;
+        context.fillStyle = "#f4fbfc";
         for (let index = 0; index < 18; index++) {
           const worldX = index * BLOCK * 12 + (index % 3) * cloudUnit * 2;
           const screenX = worldX - cameraX * 0.25;
           const y = 44 + (index * 47) % 150;
           if (screenX > viewWidth || screenX + cloudUnit * 6 < 0) continue;
-          cloudPositions.push({ x: screenX, y });
-        }
-        context.save();
-        context.globalAlpha = 0.48;
-        context.filter = "blur(5px)";
-        context.fillStyle = "#f4fbfc";
-        for (const cloud of cloudPositions) {
-          context.fillRect(cloud.x + cloudUnit, cloud.y + cloudUnit, cloudUnit * 3, cloudUnit);
-          context.fillRect(cloud.x, cloud.y + cloudUnit * 2, cloudUnit * 5, cloudUnit);
-          context.fillRect(cloud.x + cloudUnit * 2, cloud.y, cloudUnit * 2, cloudUnit);
-          context.fillRect(cloud.x + cloudUnit * 5, cloud.y + cloudUnit * 2, cloudUnit, cloudUnit);
+          context.fillRect(screenX + cloudUnit, y + cloudUnit, cloudUnit * 3, cloudUnit);
+          context.fillRect(screenX, y + cloudUnit * 2, cloudUnit * 5, cloudUnit);
+          context.fillRect(screenX + cloudUnit * 2, y, cloudUnit * 2, cloudUnit);
+          context.fillRect(screenX + cloudUnit * 5, y + cloudUnit * 2, cloudUnit, cloudUnit);
         }
         context.restore();
 
         const floor = floorY();
-        const playerState = player.dashElapsed > 0
-          ? 2
-          : player.slowElapsed > 0 && player.grounded
-            ? 3
-            : player.hitElapsed > 0
-              ? 1
-              : 0;
-        const monsterFrame = monster.dead || monster.hitElapsed > 0 ? 3 : 0;
-        const monsterAlpha = monster.dead
-          ? 1 - monster.deathElapsed / MONSTER_DEATH_FADE_DURATION
-          : 1;
-        const shadows = [
-          {
-            image: sprites[playerState],
-            x: player.x + player.shakeOffsetX - cameraX + BLOCK * 0.25,
-            y: player.y + player.height * (1 - SPRITE_VISIBLE_BOTTOM) + BLOCK * 0.2,
-            width: player.width,
-            height: player.height,
-            facing: player.facing
-          },
-          ...(!monster.dead || monsterAlpha > 0 ? [{
-            image: monsterSprites[monsterFrame],
-            x: monster.x + monster.shakeOffsetX - cameraX + BLOCK * 0.25,
-            y: monster.y + monster.height * (1 - SPRITE_VISIBLE_BOTTOM) + BLOCK * 0.2,
-            width: monster.width,
-            height: monster.height,
-            facing: monsterFrame === 0 ? -monster.facing : monster.facing,
-            alpha: monsterAlpha
-          }] : [])
-        ];
         for (let index = 0; index < 19; index++) {
           const worldX = index * BLOCK * 11;
           const width = BLOCK * (3 + index % 3);
@@ -982,26 +2127,6 @@
           const buildingTop = floor - BLOCK * 8;
           context.fillStyle = ["#89999c", "#829296", "#909d9e"][index % 3];
           context.fillRect(screenX, buildingTop, width, floor - buildingTop);
-          context.save();
-          context.beginPath();
-          context.rect(screenX, buildingTop, width, floor - buildingTop);
-          context.clip();
-          context.globalAlpha = 0.2;
-          context.filter = "brightness(0) blur(4px)";
-          for (const shadow of shadows) {
-            if (!shadow.image.complete || !shadow.image.naturalWidth) continue;
-            context.save();
-            context.globalAlpha *= shadow.alpha ?? 1;
-            if (shadow.facing < 0) {
-              context.translate(shadow.x + shadow.width, shadow.y);
-              context.scale(-1, 1);
-              context.drawImage(shadow.image, 0, 0, shadow.width, shadow.height);
-            } else {
-              context.drawImage(shadow.image, shadow.x, shadow.y, shadow.width, shadow.height);
-            }
-            context.restore();
-          }
-          context.restore();
         }
       }
 
@@ -1093,6 +2218,191 @@
         }
       }
 
+      function drawBoss() {
+        if (!boss.active || boss.defeated) return;
+        if (boss.pattern === "pattern2" && boss.step !== "pattern2-leap") return;
+        if (bossParryStunElapsed > 0
+          && Math.floor(bossParryStunBlinkElapsed / BOSS_PARRY_STUN_BLINK_INTERVAL) % 2 === 1) {
+          return;
+        }
+        const x = boss.x - cameraX;
+        const y = boss.y;
+        const image = bossSprites[boss.spriteIndex];
+        drawImageSprite(
+          image,
+          x - BOSS_SIZE / 2,
+          y - BOSS_SIZE / 2,
+          BOSS_SIZE,
+          BOSS_SIZE,
+          1,
+          boss.facing
+        );
+      }
+
+      function drawBossSpear() {
+        if (!boss.active || boss.defeated || boss.pattern === "pattern2") return;
+        if (bossParryStunElapsed > 0
+          && Math.floor(bossParryStunBlinkElapsed / BOSS_PARRY_STUN_BLINK_INTERVAL) % 2 === 1) {
+          return;
+        }
+        const attacking = boss.step === "barrage" && bossSpearAttack;
+        const elapsed = attacking ? bossSpearAttack.elapsed : 0;
+        const thrustProgress = attacking
+          ? Math.min(1, elapsed / BOSS04_THRUST_DURATION)
+          : 0;
+        const fadeProgress = attacking && BOSS04_ATTACK_INTERVAL > BOSS04_THRUST_DURATION
+          ? Math.max(
+            0,
+            (elapsed - BOSS04_THRUST_DURATION)
+              / (BOSS04_ATTACK_INTERVAL - BOSS04_THRUST_DURATION)
+          )
+          : 0;
+        const image = bossSprites[attacking ? 5 : 4];
+        const x = boss.x
+          + boss.facing * (BLOCK * 0.25 + BOSS04_THRUST_DISTANCE * thrustProgress)
+          - BOSS_SIZE / 2
+          - cameraX;
+        const y = boss.y
+          + (attacking ? bossSpearAttack.verticalOffset : 0)
+          - BOSS_SIZE / 2;
+        drawImageSprite(
+          image,
+          x,
+          y,
+          BOSS_SIZE,
+          BOSS_SIZE,
+          1 - fadeProgress,
+          -boss.facing
+        );
+      }
+
+      function drawRotatedBossSprite(image, centerX, centerY, angle, alpha = 1) {
+        if (!image.complete || !image.naturalWidth) return;
+        context.save();
+        context.globalAlpha = alpha;
+        context.translate(centerX - cameraX, centerY);
+        context.rotate(angle);
+        context.drawImage(
+          image,
+          -BOSS_SIZE / 2,
+          -BOSS_SIZE / 2,
+          BOSS_SIZE,
+          BOSS_SIZE
+        );
+        context.restore();
+      }
+
+      function drawBoss17WaveTile(tile, groundY) {
+        const elapsed = tile.elapsed;
+        if (elapsed < 0 || elapsed >= BOSS_PATTERN_TWO_WAVE_LIFETIME
+          || !boss17Sprite.complete || !boss17Sprite.naturalWidth) return;
+        const scale = elapsed < BOSS17_GROW_DURATION
+          ? 0.5 + 0.5 * (elapsed / BOSS17_GROW_DURATION)
+          : 1;
+        const alpha = elapsed < BOSS17_FADE_START
+          ? 1
+          : Math.max(0, 1 - (elapsed - BOSS17_FADE_START) / BOSS17_FADE_DURATION);
+        const imageHeight = BOSS17_WAVE_TILE_HEIGHT * scale;
+        context.save();
+        context.globalAlpha = alpha;
+        context.drawImage(
+          boss17Sprite,
+          BOSS17_VISIBLE_LEFT * 1024,
+          BOSS17_VISIBLE_TOP * 1024,
+          (BOSS17_VISIBLE_RIGHT - BOSS17_VISIBLE_LEFT) * 1024,
+          (BOSS17_VISIBLE_BOTTOM - BOSS17_VISIBLE_TOP) * 1024,
+          tile.x - BOSS17_WAVE_TILE_WIDTH / 2 - cameraX,
+          groundY - imageHeight,
+          BOSS17_WAVE_TILE_WIDTH,
+          imageHeight
+        );
+        context.restore();
+      }
+
+      function drawBossPatternTwo() {
+        if (!bossPatternTwo) return;
+        if (boss.step === "pattern2-aim") {
+          drawImageSprite(
+            bossSprites[3],
+            bossPatternTwo.targetX - BOSS_SIZE / 2 - cameraX,
+            bossPatternTwo.targetY - BOSS_SIZE / 2,
+            BOSS_SIZE,
+            BOSS_SIZE
+          );
+          drawRotatedBossSprite(
+            bossSprites[4],
+            bossPatternTwo.targetX
+              + BOSS_SIZE * (BOSS03_VISIBLE_LEFT - BOSS04_VISIBLE_BOTTOM),
+            bossPatternTwo.targetY,
+            -Math.PI / 2
+          );
+        } else if (boss.step === "pattern2-dive") {
+          const progress = Math.min(
+            1,
+            bossPatternTwo.elapsed / BOSS_PATTERN_TWO_DIVE_DURATION
+          );
+          const diveX = bossPatternTwo.diveStartX
+            + (bossPatternTwo.diveEndX - bossPatternTwo.diveStartX) * progress;
+          const diveY = bossPatternTwo.diveStartY
+            + (bossPatternTwo.diveEndY - bossPatternTwo.diveStartY) * progress;
+          drawRotatedBossSprite(
+            bossSprites[4],
+            diveX,
+            diveY,
+            -2 * Math.PI / 3
+          );
+        } else if (boss.step === "pattern2-impact") {
+          for (const pair of bossPatternTwo.wavePairs) {
+            for (const tile of pair.tiles) {
+              drawBoss17WaveTile(tile, bossPatternTwo.groundY);
+            }
+          }
+        }
+      }
+
+      function drawPattern6() {
+        if (!pattern6) return;
+        if (pattern6.phase === "target" || pattern6.phase === "strike" || pattern6.phase === "fade") {
+          const alpha = pattern6.phase === "fade"
+            ? Math.max(0, 1 - pattern6.elapsed / PATTERN_BOSS_FADE_DURATION)
+            : 1;
+          for (const boss of pattern6.bosses) {
+            const image = patternBossSprites[boss.spriteIndex];
+            drawImageSprite(
+              image,
+              boss.x + (boss.shakeOffsetX || 0) - PATTERN_BOSS_SIZE / 2 - cameraX,
+              boss.y - PATTERN_BOSS_SIZE / 2,
+              PATTERN_BOSS_SIZE,
+              PATTERN_BOSS_SIZE,
+              alpha
+            );
+          }
+          return;
+        }
+
+        const alpha = Math.min(
+          1,
+          (PATTERN_BOSS12_DURATION - pattern6.elapsed) / PATTERN_BOSS12_FADE_DURATION
+        );
+        const anchorX = pattern6.originX - cameraX;
+        const anchorY = floorY();
+        context.save();
+        context.globalAlpha = Math.max(0, alpha);
+        context.translate(anchorX, anchorY);
+        context.rotate(-pattern6.elapsed * PATTERN_BOSS12_ROTATION_SPEED);
+        const image = patternBossSprites[0];
+        if (image.complete && image.naturalWidth) {
+          context.drawImage(
+            image,
+            -PATTERN_BOSS_SIZE / 2,
+            -PATTERN_BOSS_SIZE * PATTERN_BOSS12_COLOR_BOTTOM,
+            PATTERN_BOSS_SIZE,
+            PATTERN_BOSS_SIZE
+          );
+        }
+        context.restore();
+      }
+
       function drawPlayer() {
         const screenX = player.x + player.shakeOffsetX - cameraX;
         const dashActive = player.dashElapsed > 0;
@@ -1118,6 +2428,37 @@
         const playerSpriteY = player.y + player.height * (1 - SPRITE_VISIBLE_BOTTOM);
         drawSprite(playerState, screenX, playerSpriteY, player.width, player.height, 1, player.facing);
 
+        if (player.defenseBreakElapsed > 0) {
+          const progress = 1 - player.defenseBreakElapsed / PLAYER_DEFENSE_BREAK_EFFECT_DURATION;
+          const shieldHitbox = getDefenseShieldHitbox();
+          drawImageSprite(
+            defenseSprites[1],
+            shieldHitbox.x - cameraX,
+            shieldHitbox.y,
+            shieldHitbox.width,
+            shieldHitbox.height,
+            0.5 * (1 - progress)
+          );
+          if (defenseSprites[1].complete
+            && defenseSprites[1].naturalWidth
+            && !player.defenseBreakSoundPlayed) {
+            player.defenseBreakSoundPlayed = true;
+            playSound(defenseBreakSound, "방어 파괴 소리를 재생하지 못했습니다.");
+          }
+        } else if (isDefenseHeld() || player.defenseEffectElapsed < PLAYER_DEFENSE_EFFECT_DURATION) {
+          const shieldHitbox = getDefenseShieldHitbox();
+          drawImageSprite(
+            defenseSprites[0],
+            shieldHitbox.x - cameraX,
+            shieldHitbox.y,
+            shieldHitbox.width,
+            shieldHitbox.height,
+            isDefenseHeld()
+              ? 0.5
+              : 0.5 * (1 - player.defenseEffectElapsed / PLAYER_DEFENSE_EFFECT_DURATION)
+          );
+        }
+
         if (dashActive) {
           const alpha = Math.max(0, 1 - player.dashEffectElapsed / 0.3);
           const effectHeight = player.height;
@@ -1129,6 +2470,21 @@
         drawBackground();
         drawPlatforms();
         drawMonster();
+        for (const minion of bossParryMinions) {
+          drawImageSprite(
+            monsterSprites[0],
+            minion.x - cameraX,
+            minion.y + MONSTER_SIZE * (1 - SPRITE_VISIBLE_BOTTOM),
+            MONSTER_SIZE,
+            MONSTER_SIZE,
+            1,
+            -minion.facing
+          );
+        }
+        drawBossSpear();
+        drawBoss();
+        drawBossPatternTwo();
+        drawPattern6();
         drawPlayer();
         const blocks = Math.floor(player.x / BLOCK);
         const status = player.dashElapsed > 0
@@ -1138,17 +2494,41 @@
             : player.hitElapsed > 0
               ? 1
               : 0;
-        const monsterStatus = monster.dead
-          ? `재등장 ${monster.respawnElapsed.toFixed(1)}초`
-          : `몬스터 HP ${monster.hp}/${MONSTER_MAX_HP}`;
-        readout.textContent = `상태 ${status} · ${blocks.toLocaleString("ko-KR")} / ${MAP_BLOCKS} 블럭 · 플레이어 HP ${player.hp}/${PLAYER_MAX_HP} · ${monsterStatus}`;
+        const monsterStatus = monster.permanentlyDefeated
+          ? `몬스터 처치 ${monstersDefeated}/3`
+          : monster.dead
+            ? `재등장 ${monster.respawnElapsed.toFixed(1)}초 · 처치 ${monstersDefeated}/3`
+            : `몬스터 HP ${monster.hp}/${MONSTER_MAX_HP} · 처치 ${monstersDefeated}/3`;
+        const bossStatus = !boss.active
+          ? "보스 대기"
+          : boss.defeated
+            ? "보스 격파"
+            : `보스 ${boss.phase}P ${boss.hp}/${boss.maxHp}`;
+        readout.textContent = `상태 ${status} · ${blocks.toLocaleString("ko-KR")} / ${MAP_BLOCKS} 블럭 · 플레이어 HP ${player.hp}/${PLAYER_MAX_HP} · 방어 HP ${player.defenseHp.toFixed(1)}/${PLAYER_MAX_DEFENSE_HP} · ${monsterStatus} · ${bossStatus}`;
       }
 
       function restartGame() {
-        keys.clear();
+        clearInputKeys();
+        activeTouchPointers.clear();
+        joystickPointerId = null;
+        joystickDirection = "";
+        joystickStick.style.transform = "translate(-50%, -50%)";
+        touchControls.querySelectorAll(".is-pressed").forEach((button) => {
+          button.classList.remove("is-pressed");
+        });
         gameOver = false;
         gameOverOverlay.hidden = true;
         player.hp = PLAYER_MAX_HP;
+        player.defenseHp = PLAYER_MAX_DEFENSE_HP;
+        player.defenseElapsed = PLAYER_PARRY_WINDOW;
+        player.defenseEffectElapsed = PLAYER_DEFENSE_EFFECT_DURATION;
+        player.defenseBreakElapsed = 0;
+        player.defenseBreakSoundPlayed = false;
+        player.parryUsed = false;
+        bossParryStreak = 0;
+        bossParryStunElapsed = 0;
+        bossParryStunBlinkElapsed = 0;
+        bossParryMinions = [];
         player.x = Math.max(0, viewWidth / 2 - player.width / 2);
         player.y = floorY() - player.height;
         player.vx = 0;
@@ -1177,11 +2557,13 @@
         player.hitDirection = 0;
         player.shakeOffsetX = 0;
         player.dashCooldown = 0;
+        player.dashInvulnerabilityElapsed = 0;
         monster.x = monster.spawnX;
         monster.y = monster.spawnY;
         monster.facing = monster.spawnFacing;
         monster.hp = MONSTER_MAX_HP;
         monster.dead = false;
+        monster.permanentlyDefeated = false;
         monster.deathElapsed = 0;
         monster.respawnElapsed = 0;
         monster.mode = "approach";
@@ -1201,6 +2583,9 @@
         monster.pendingHitDirection = 1;
         monster.boneThrown = false;
         monster.projectiles = [];
+        monstersDefeated = 0;
+        resetBoss();
+        pattern6 = null;
         cameraX = Math.max(
           0,
           Math.min(WORLD_WIDTH - viewWidth, player.x + player.width / 2 - viewWidth / 2)
@@ -1210,10 +2595,12 @@
       }
 
       function frame(time) {
-        const delta = previousTime ? Math.min((time - previousTime) / 1000, 0.04) : 0;
-        previousTime = time;
-        if (!gameOver) update(delta);
-        draw();
+        if (gameStarted) {
+          const delta = previousTime ? Math.min((time - previousTime) / 1000, 0.04) : 0;
+          previousTime = time;
+          if (!gameOver) update(delta);
+          draw();
+        }
         requestAnimationFrame(frame);
       }
 
@@ -1221,16 +2608,140 @@
         if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", " "].includes(event.key)) {
           event.preventDefault();
         }
-        if (gameOver) return;
+        if (!gameStarted || gameOver) return;
         if (event.repeat) return;
-        keys.add(event.key);
-        if (event.key === "ArrowUp" || event.key === " ") jump();
+        if (event.key.toLowerCase() === "r") {
+          enterBossFight();
+          return;
+        }
+        if ((event.key === "x" || event.key === "X")
+          && (player.defenseBreakElapsed > 0 || player.defenseHp <= 0)) return;
+        pressInputKey(event.key, "keyboard");
+        if (event.key === "ArrowUp") jump();
         if (event.key === "ArrowDown") dropThroughPlatform();
         if (event.key.toLowerCase() === "z") startDash();
+        if (event.key === "x" || event.key === "X") {
+          player.defenseElapsed = 0;
+          player.parryUsed = false;
+          player.defenseEffectElapsed = 0;
+        }
+        if (event.key.toLowerCase() === "t") startPattern6();
       });
 
-      window.addEventListener("keyup", (event) => keys.delete(event.key));
-      window.addEventListener("blur", () => keys.clear());
+      modeSelection.querySelectorAll("[data-game-mode]").forEach((button) => {
+        button.addEventListener("click", () => startGame(button.dataset.gameMode));
+      });
+
+      window.addEventListener("keyup", (event) => releaseInputKey(event.key, "keyboard"));
+      function startTouchAction(action) {
+        if (action === "dash") startDash();
+        if (action === "defense") {
+          if (player.defenseBreakElapsed > 0 || player.defenseHp <= 0) return;
+          if (!isDefenseHeld()) {
+            player.defenseElapsed = 0;
+            player.parryUsed = false;
+            player.defenseEffectElapsed = 0;
+          }
+          pressInputKey("x", "touch");
+        }
+      }
+
+      function setJoystickDirection(direction) {
+        if (direction === joystickDirection) return;
+        if (joystickDirection === "left") releaseInputKey("ArrowLeft", "touch");
+        if (joystickDirection === "right") releaseInputKey("ArrowRight", "touch");
+        joystickDirection = direction;
+        if (direction === "left") pressInputKey("ArrowLeft", "touch");
+        if (direction === "right") pressInputKey("ArrowRight", "touch");
+        if (direction === "up") jump();
+        if (direction === "down") dropThroughPlatform();
+      }
+
+      function updateJoystick(event) {
+        const bounds = joystick.getBoundingClientRect();
+        const centerX = bounds.left + bounds.width / 2;
+        const centerY = bounds.top + bounds.height / 2;
+        const rawX = event.clientX - centerX;
+        const rawY = event.clientY - centerY;
+        const distance = Math.hypot(rawX, rawY);
+        const offsetScale = distance > JOYSTICK_MAX_OFFSET
+          ? JOYSTICK_MAX_OFFSET / distance
+          : 1;
+        const offsetX = rawX * offsetScale;
+        const offsetY = rawY * offsetScale;
+        joystickStick.style.transform = `translate(calc(-50% + ${offsetX}px), calc(-50% + ${offsetY}px))`;
+
+        if (distance < JOYSTICK_ACTIVATION_OFFSET) {
+          setJoystickDirection("");
+          return;
+        }
+        if (Math.abs(rawY) > Math.abs(rawX) * 1.15) {
+          setJoystickDirection(rawY < 0 ? "up" : "down");
+        } else {
+          setJoystickDirection(rawX < 0 ? "left" : "right");
+        }
+      }
+
+      function resetJoystick() {
+        setJoystickDirection("");
+        joystickStick.style.transform = "translate(-50%, -50%)";
+      }
+
+      function endTouchPointer(pointerId) {
+        const action = activeTouchPointers.get(pointerId);
+        if (!action) return;
+        activeTouchPointers.delete(pointerId);
+        if (action === "joystick") {
+          joystickPointerId = null;
+          resetJoystick();
+          return;
+        }
+        if (action === "defense") {
+          releaseInputKey("x", "touch");
+          releaseInputKey("X", "touch");
+        }
+        touchControls.querySelector(`[data-touch-action="${action}"]`)
+          ?.classList.remove("is-pressed");
+      }
+
+      touchControls.addEventListener("pointerdown", (event) => {
+        const button = event.target.closest("[data-touch-action]");
+        if (!button || gameOver) return;
+        event.preventDefault();
+        const action = button.dataset.touchAction;
+        if (action === "joystick" && joystickPointerId !== null) return;
+        activeTouchPointers.set(event.pointerId, action);
+        button.setPointerCapture(event.pointerId);
+        if (action === "joystick") {
+          joystickPointerId = event.pointerId;
+          updateJoystick(event);
+        } else {
+          button.classList.add("is-pressed");
+          startTouchAction(action);
+        }
+      });
+
+      touchControls.addEventListener("pointermove", (event) => {
+        if (event.pointerId === joystickPointerId) {
+          event.preventDefault();
+          updateJoystick(event);
+        }
+      });
+
+      touchControls.addEventListener("pointerup", (event) => endTouchPointer(event.pointerId));
+      touchControls.addEventListener("pointercancel", (event) => endTouchPointer(event.pointerId));
+      touchControls.addEventListener("lostpointercapture", (event) => endTouchPointer(event.pointerId));
+
+      window.addEventListener("blur", () => {
+        clearInputKeys();
+        activeTouchPointers.clear();
+        joystickPointerId = null;
+        joystickDirection = "";
+        joystickStick.style.transform = "translate(-50%, -50%)";
+        touchControls.querySelectorAll(".is-pressed").forEach((button) => {
+          button.classList.remove("is-pressed");
+        });
+      });
       restartButton.addEventListener("click", restartGame);
       window.addEventListener("resize", () => {
         resize();
